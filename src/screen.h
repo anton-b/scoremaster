@@ -22,12 +22,12 @@ class Screen
         ~Screen();
         void show_red_score(int);
         void show_blue_score(int);
-        void displaytext(char * text);
+        void displaytext(char * text, int size);
+        void draw_header();
+        void clear();
     private:
         Adafruit_SSD1306 * __scorescreen;
-        void clear();
         void cleararea(int x, int y, int w, int h);
-        void draw_header();
         void drawscore(int x, int y, int w, int h, int score);
         void show();
 };

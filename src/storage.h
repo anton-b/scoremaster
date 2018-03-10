@@ -1,3 +1,5 @@
+#ifndef STORAGELIB
+#define STORAGELIB
 #include "types.h"
 
 class Storage 
@@ -12,3 +14,4 @@ class Storage
     private:
         int __sttype;
 };
+#endif

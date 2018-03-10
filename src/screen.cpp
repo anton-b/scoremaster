@@ -15,20 +15,24 @@ Screen::~Screen()
 
 void Screen::show_blue_score(int score) 
 {
+    draw_header();
     drawscore(0, 20, 55, 40, score);
 };
 
 void Screen::show_red_score(int score) 
 {
+    draw_header();
     drawscore(77, 20, 55, 40, score);
 };
 
-void Screen::displaytext(char * text)
+void Screen::displaytext(char * text, int size)
 {
     clear();
-    __scorescreen->setTextSize(3);
+    __scorescreen->setCursor(0, 0);
+    __scorescreen->setTextSize(size);
     __scorescreen->setTextColor(WHITE);
     __scorescreen-> print(text);
+    show();
 };
 
 void Screen::drawscore(int x, int y, int w, int h, int score)
@@ -37,7 +41,7 @@ void Screen::drawscore(int x, int y, int w, int h, int score)
     __scorescreen->setTextColor(WHITE);
     __scorescreen->setCursor(x, y);
     __scorescreen->fillRect(x, y, w, h, BLACK);
-    __scorescreen-> print(score);
+    __scorescreen->print(score);
     show();
 };
 

@@ -1,8 +1,8 @@
 #ifndef MATCHTYPES
 #define MATCHTYPES 
 
-#define TEAMRED 0
-#define TEAMBLUE 1
+#define TEAMRED 1
+#define TEAMBLUE 0
 
 typedef unsigned char uint8;
 typedef bool team;
@@ -24,7 +24,9 @@ struct matchrecord
   player playerBlueB;
   player playerRedA;
   player playerRedB;
+  int blue_score;
+  int red_score;
   team win;
-  matchtime time;
+  int time;
 };
 #endif
