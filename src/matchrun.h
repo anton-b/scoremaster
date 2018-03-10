@@ -11,6 +11,6 @@ MatchRun class implements control over how match is going on:
 class MatchRun
 {
     public:
-        MatchRun(player players[4]);
+        MatchRun(player players[4], Screen screen);
         ~MatchRun();
 };

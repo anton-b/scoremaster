@@ -1,6 +1,12 @@
 #include "matchrun.h"
 
-MatchRun::MatchRun(player players[4])
+
+/* 
+    Players array 0 and 1 are BLUE team, 2 and 3 are RED
+    Screen is the screen to display score and text
+*/
+
+MatchRun::MatchRun(player players[4], Screen screen)
 {
     return;
 };
