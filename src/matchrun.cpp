@@ -13,7 +13,7 @@ MatchRun::MatchRun(Screen * screen)
     // __matchdata.playerRedA = players[2];
     // __matchdata.playerRedB = players[3];
     __is_finished = false;
-    __matchdata.blue_score = 9;
+    __matchdata.blue_score = 0;
     __matchdata.red_score = 0;
     __screen = screen;
     // __storage = storage;
@@ -38,6 +38,7 @@ void MatchRun::blue_score_handle()
         {
             __screen->displaytext("Blue team wins!", 2);
             __is_finished = true;
+            
         }
         else if (!__is_finished)
         {
@@ -54,12 +55,16 @@ void MatchRun::red_score_handle()
     {
         __last_goal_time = current_time;
         __matchdata.red_score = __matchdata.red_score + 1;
-        if (__matchdata.red_score == 10)
+        if (__matchdata.red_score >= 10)
         {
-            __screen -> clear();
-            __screen -> displaytext("Red team wins!", 2);
+            __screen->displaytext("Red team wins!", 2);
+            __is_finished = true;
+            
         }
-        __screen -> show_red_score(__matchdata.red_score);
+        else if (!__is_finished)
+        {
+            __screen->show_red_score(__matchdata.red_score);
+        }
     };
 };
 

@@ -1,44 +1,55 @@
 #include <Arduino.h>
-// #include "src/types.h"
-// #include "src/storage.h"
+#include "src/types.h"
+#include "src/storage.h"
 #include "src/screen.h"
 #include "src/matchrun.h"
-#define I 5 //25 worked, 19 worked, 18 worked
+//25 worked, 19 worked, 18 worked, 5 worked
+#define BLUEDETECTOR 5 
+#define REDDETECTOR 18
 
 Screen * s;
-volatile int bluescore = 0;
-volatile int prevgoaltime = 0;
-
+MatchRun * mrun;
+Storage * st;
 
 void setup()
 {
-    prevgoaltime = millis();
     Serial.begin(115200);
     s = new Screen();
-    pinMode(I, INPUT_PULLUP);
-    attachInterrupt(digitalPinToInterrupt(I), bluescored, FALLING);
+    newmatch();
+    pinMode(BLUEDETECTOR, INPUT_PULLUP);
+    pinMode(REDDETECTOR, INPUT_PULLUP);
+    attachInterrupt(digitalPinToInterrupt(BLUEDETECTOR), bluescored, FALLING);
+    attachInterrupt(digitalPinToInterrupt(REDDETECTOR), redscored, FALLING);
 };
 
 void loop()
 {
-    Serial.print(digitalRead(I));
+    if (mrun -> is_finished())
+    {
+        delete mrun;
+        mrun = NULL;
+        newmatch();
+    };
     delay(1000);
-    // x++;
-    // if (x == 10) {x = 0;};
-    // s -> show_red_score(x);
-    // s -> show_blue_score(x);
-    // delay(1000);
-    // s -> show_blue_score(10);
 };
+
+void newmatch() 
+{
+    mrun = new MatchRun(s);
+}
 
 void bluescored()
 {
-    int currenttime = millis();
-    int treshold = currenttime - prevgoaltime;
-    if (treshold >= 3000)
+    if (mrun != NULL && !mrun -> is_finished())
     {
-        prevgoaltime = currenttime;
-        bluescore++;
-        s -> show_blue_score(bluescore);
+        mrun->blue_score_handle();
+    };
+}
+
+void redscored()
+{
+    if (mrun != NULL && !mrun -> is_finished())
+    {
+        mrun->red_score_handle();
     };
 }
