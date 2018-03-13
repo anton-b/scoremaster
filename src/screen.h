@@ -22,7 +22,7 @@ class Screen
         ~Screen();
         void show_red_score(int);
         void show_blue_score(int);
-        void displaytext(char * text, int size);
+        void displaytext(const char * text, int size);
         void draw_header();
         void clear();
     private:

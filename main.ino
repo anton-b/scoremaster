@@ -4,7 +4,7 @@
 #include "src/screen.h"
 #include "src/matchrun.h"
 //25 worked, 19 worked, 18 worked, 5 worked
-#define BLUEDETECTOR 5 
+#define BLUEDETECTOR 19 
 #define REDDETECTOR 18
 
 Screen * s;
@@ -15,6 +15,24 @@ void setup()
 {
     Serial.begin(115200);
     s = new Screen();
+    st = new Storage();
+    // struct matchrecord
+    // {
+    // uint8 id;
+    // player playerBlueA;
+    // player playerBlueB;
+    // player playerRedA;
+    // player playerRedB;
+    // int blue_score;
+    // int red_score;
+    // team win;
+    // int time;
+    // };
+    player p;
+    matchrecord * m;
+    m -> id = 0;
+    // st -> save("match1", m);
+
     newmatch();
     pinMode(BLUEDETECTOR, INPUT_PULLUP);
     pinMode(REDDETECTOR, INPUT_PULLUP);

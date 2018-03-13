@@ -10,8 +10,8 @@ typedef int matchtime; //Match time in seconds
 
 struct player
 {
-    uint8 id;
-    const char * name;
+    uint8 id = 0;
+    const char * name = "default";
 };
 
 /*
@@ -24,9 +24,10 @@ struct matchrecord
   player playerBlueB;
   player playerRedA;
   player playerRedB;
-  int blue_score;
-  int red_score;
-  team win;
-  int time;
+  int blue_score = 0;
+  int red_score = 0;
+  team win = TEAMBLUE;
+  int time = 0;
+  int timestart = 0; 
 };
 #endif

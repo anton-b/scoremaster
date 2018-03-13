@@ -5,7 +5,6 @@ Screen::Screen()
     __scorescreen = new Adafruit_SSD1306(OLED_RESET);
     __scorescreen->begin(SSD1306_SWITCHCAPVCC, 0x3C);
     clear();
-    draw_header();
 };
 
 Screen::~Screen() 
@@ -25,7 +24,7 @@ void Screen::show_red_score(int score)
     drawscore(77, 20, 55, 40, score);
 };
 
-void Screen::displaytext(char * text, int size)
+void Screen::displaytext(const char * text, int size)
 {
     clear();
     __scorescreen->setCursor(0, 0);
