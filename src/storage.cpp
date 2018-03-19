@@ -10,6 +10,7 @@ Storage::Storage(const char *nspace)
     handle_nvs_error(nvs_flash_init());
     handle_nvs_error(nvs_open(nspace, NVS_READWRITE, &__st_handle));
     ensure_index();
+    ensure_new_id();
 };
 
 Storage::~Storage()
@@ -17,13 +18,18 @@ Storage::~Storage()
     nvs_close(__st_handle);
 };
 
-void Storage::add_element(int id, void *data, size_t size)
+void Storage::add_element(void *data, size_t size)
 {
+    int id = new_id();
+    Serial.print("newid:");
+    Serial.println(id);
     if (element_exists(id) == false)
     {
         write(make_key(id), data, size);
         add_to_index(id);
         commit_index();
+        next_id();
+        commit_new_id();
     } else 
     {
         throw "element_exists";
@@ -54,6 +60,7 @@ void Storage::remove_all()
 {
     // Just clear all namespace keys including index
     clear_all();
+    
 };
 
 void Storage::write(const char *key, void *data, size_t size)
@@ -101,7 +108,7 @@ void Storage::remove_from_index(int id)
 {
     for (std::vector<int>::iterator i = __index.begin(); i != __index.end(); ++i)
     {
-        if (*i = id)
+        if (*i == id)
         {
             __index.erase(i);
         };
@@ -138,6 +145,34 @@ void Storage::ensure_index()
     catch (const char *e)
     {
         return;
+    }
+};
+
+int Storage::new_id()
+{
+    return __new_id;
+};
+
+void Storage::next_id()
+{
+    __new_id++;
+};
+
+void Storage::commit_new_id()
+{
+    write("__new_id__", &__new_id, sizeof(int));
+};
+
+void Storage::ensure_new_id()
+{
+    try
+    {
+        read("__new_id__", &__new_id);
+    }
+    catch (const char *e)
+    {
+        __new_id = 0;
+        commit_new_id();
     }
 };
 
