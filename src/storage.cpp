@@ -1,9 +1,4 @@
 #include "storage.h"
-#include <Arduino.h>
-#include <string.h>
-
-
-
 
 Storage::Storage(const char *nspace)
 {
@@ -23,20 +18,21 @@ void Storage::add_element(void *data, size_t size)
     int id = new_id();
     Serial.print("newid:");
     Serial.println(id);
-    if (element_exists(id) == false)
+    if (!element_exists(id))
     {
         write(make_key(id), data, size);
         add_to_index(id);
         commit_index();
         next_id();
         commit_new_id();
-    } else 
+    }
+    else
     {
         throw "element_exists";
     };
 };
 
-void Storage::get_element(int id, void * result)
+void Storage::get_element(int id, void *result)
 {
     if (element_exists(id))
     {
@@ -58,9 +54,10 @@ void Storage::remove_element(int id)
 
 void Storage::remove_all()
 {
-    // Just clear all namespace keys including index
+    // Just clear all namespace keys including index, make __new_id=0.
+    // Please note that looks like namespace is not getting cleared before nvs_close is called.
     clear_all();
-    
+    __new_id = 0;
 };
 
 void Storage::write(const char *key, void *data, size_t size)
@@ -106,13 +103,7 @@ void Storage::add_to_index(int id)
 
 void Storage::remove_from_index(int id)
 {
-    for (std::vector<int>::iterator i = __index.begin(); i != __index.end(); ++i)
-    {
-        if (*i == id)
-        {
-            __index.erase(i);
-        };
-    };
+    __index.erase(remove(__index.begin(), __index.end(), id));
     commit_index();
 };
 
@@ -120,13 +111,14 @@ bool Storage::element_exists(int id)
 {
     return (find(__index.begin(), __index.end(), id) != __index.end());
 };
- 
+
 void Storage::commit_index()
 {
     if (__index.size() > 0)
     {
         write("__index__", &__index[0], sizeof(int) * __index.size());
-    } else
+    }
+    else
     {
         clear("__index__");
     };

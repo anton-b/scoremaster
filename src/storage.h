@@ -3,6 +3,7 @@
 #include "types.h"
 #include "nvs.h"
 #include "nvs_flash.h"
+#include <Arduino.h>
 #include <vector>
 #include <algorithm>
 
