@@ -2,6 +2,7 @@
 
 Storage::Storage(const char *nspace)
 {
+    __name_space = nspace;
     handle_nvs_error(nvs_flash_init());
     handle_nvs_error(nvs_open(nspace, NVS_READWRITE, &__st_handle));
     ensure_index();
@@ -16,8 +17,6 @@ Storage::~Storage()
 void Storage::add_element(void *data, size_t size)
 {
     int id = new_id();
-    Serial.print("newid:");
-    Serial.println(id);
     if (!element_exists(id))
     {
         write(make_key(id), data, size);
@@ -49,7 +48,6 @@ void Storage::remove_element(int id)
 {
     clear(make_key(id));
     remove_from_index(id);
-    commit_index();
 };
 
 void Storage::remove_all()
@@ -58,6 +56,7 @@ void Storage::remove_all()
     // Please note that looks like namespace is not getting cleared before nvs_close is called.
     clear_all();
     __new_id = 0;
+    __index.clear();
 };
 
 void Storage::write(const char *key, void *data, size_t size)
@@ -83,6 +82,7 @@ void Storage::clear_all()
 {
     handle_nvs_error(nvs_erase_all(__st_handle));
     handle_nvs_error(nvs_commit(__st_handle));
+    // bounce_nvs();
 };
 
 void Storage::clear(const char *key)
@@ -172,6 +172,13 @@ const char *Storage::make_key(int id)
 {
     String key = String(id, 10);
     return key.c_str();
+};
+
+
+void Storage::bounce_nvs()
+{
+    nvs_close(__st_handle);
+    nvs_open(__name_space, NVS_READWRITE, &__st_handle);
 };
 
 void Storage::handle_nvs_error(esp_err_t error)

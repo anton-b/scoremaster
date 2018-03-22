@@ -19,7 +19,8 @@ class Storage
     void remove_all();
     bool element_exists(int id);
     size_t length();
-  // protected:
+    void bounce_nvs();
+    protected:
     /*Underlyng memory manipulation*/
     void handle_nvs_error(esp_err_t error);
     void write(const char *key, void *data, size_t size);
@@ -40,6 +41,7 @@ class Storage
     const char *make_key(int id);
     nvs_handle __st_handle;
     std::vector<int> __index;
+    const char * __name_space;
     int __new_id;
 };
 #endif
