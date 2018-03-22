@@ -39,6 +39,7 @@ class Storage
     void ensure_new_id();
     size_t key_size(const char *key);
     const char *make_key(int id);
+    /*Attributes*/
     nvs_handle __st_handle;
     std::vector<int> __index;
     const char * __name_space;

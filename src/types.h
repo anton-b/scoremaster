@@ -10,7 +10,7 @@ typedef int matchtime; //Match time in seconds
 
 struct player
 {
-    uint8 id = 0;
+    int id = 0;
     const char * name = "default";
 };
 
@@ -19,7 +19,7 @@ matchrecord the structure to be stored as binary in some arbitrary storage
 */
 struct matchrecord
 {
-  uint8 id;
+  int id = 0;
   player playerBlueA;
   player playerBlueB;
   player playerRedA;
@@ -29,5 +29,11 @@ struct matchrecord
   team win = TEAMBLUE;
   int time = 0;
   int timestart = 0; 
+};
+
+struct storage_error
+{
+  int code = 0;
+  const char * reason = "";
 };
 #endif

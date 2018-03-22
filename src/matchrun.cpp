@@ -1,12 +1,6 @@
 #include "matchrun.h"
 
-
-/* 
-    Players array 0 and 1 are BLUE team, 2 and 3 are RED
-    Screen is the screen to display score and text
-*/
-
-MatchRun::MatchRun(Screen * screen)
+MatchRun::MatchRun(Screen * screen, Storage * storage)
 {
     // __matchdata.playerBlueA = players[0];
     // __matchdata.playerBlueB = players[1];
@@ -16,7 +10,7 @@ MatchRun::MatchRun(Screen * screen)
     __matchdata.blue_score = 0;
     __matchdata.red_score = 0;
     __screen = screen;
-    // __storage = storage;
+    __storage = storage;
     screen -> displaytext("GO!!!", 4);
     delay(3000);
     screen -> clear();
@@ -75,10 +69,6 @@ bool MatchRun::is_finished()
 
 MatchRun::~MatchRun()
 {
-    __screen -> displaytext("Saving match results.", 2);
-    delay(300);
-    __screen -> displaytext("Saving match results..", 2);
-    delay(300);
-    __screen -> displaytext("Saving match results...", 2);
+    __storage -> add_element(&__matchdata, sizeof(matchrecord));
     return;
 };
