@@ -52,8 +52,6 @@ void Storage::remove_element(int id)
 
 void Storage::remove_all()
 {
-    // Just clear all namespace keys including index, make __new_id=0.
-    // Please note that looks like namespace is not getting cleared before nvs_close is called.
     clear_all();
     __new_id = 0;
     __index.clear();
