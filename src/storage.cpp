@@ -14,7 +14,7 @@ Storage::~Storage()
     nvs_close(__st_handle);
 };
 
-void Storage::add_element(void *data, size_t size)
+int Storage::add_element(void *data, size_t size)
 {
     int id = new_id();
     if (!element_exists(id))
@@ -24,6 +24,7 @@ void Storage::add_element(void *data, size_t size)
         commit_index();
         next_id();
         commit_new_id();
+        return id;
     }
     else
     {

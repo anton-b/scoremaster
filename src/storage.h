@@ -12,7 +12,7 @@ class Storage
   public:
     Storage(const char *nspace);
     ~Storage();
-    void add_element(void *data, size_t size);
+    int add_element(void *data, size_t size);
     void get_element(int id, void * result);
     std::vector<int> list_elements();
     void remove_element(int id);
