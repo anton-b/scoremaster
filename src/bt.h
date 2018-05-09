@@ -19,11 +19,11 @@ private:
   static char *bda2str(esp_bd_addr_t bda, char *str, size_t size);
   static void handle_device_found(esp_bt_gap_cb_param_t *param);
   BT();
-  ~BT();
 
 public:
   static void bt_app_gap_cb(esp_bt_gap_cb_event_t event, esp_bt_gap_cb_param_t *param);
   static std::set<std::string> get_discovered();
   static void discover();
   static bool is_discovery_complete();
+  ~BT();
 };

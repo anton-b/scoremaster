@@ -1,6 +1,7 @@
 #include "storage.h"
 #include "types.h"
-#include <functional>
+#include "bt.h"
+#include <cstring>
 
 struct user
 {
@@ -13,15 +14,48 @@ class Authenticator
     Storage *__storage_users;
     std::vector<user> __discovered_users;
     const char *__dev_name = "AUTHENTICATOR";
+    BT * bt;
+
   public:
     Authenticator()
     {
-        BT bt = BT::getInstance();
+        __storage_users = new Storage("users");
+        bt = BT::getInstance();
+    };
+
+    void discover_users()
+    {
+        bt -> discover();
+        user u;
+        Serial.println("Started discovery.");
+        while (!bt->is_discovery_complete())
+        {
+            delay(1000);
+        };
+        Serial.println("Finished discovery");
+        std::set<std::string> addr_found = bt->get_discovered();
+
+        for (std::set<std::string>::iterator i = addr_found.begin(); i != addr_found.end(); ++i)
+        {
+            int id = db_user_exists(i->c_str());
+            Serial.println(i->c_str());
+            Serial.println(id);
+            if (id > -1)
+            {
+                u = db_get_user(id);
+                __discovered_users.push_back(u);
+            };
+        }
+    };
+
+    void db_remove_all()
+    {
+        __storage_users -> remove_all();
     };
 
     player *db_add_user(player *p, const char *bt_mac)
     {
-        if (!db_user_exists(bt_mac))
+        if (db_user_exists(bt_mac) == -1)
         {
             user u;
             u.bt_mac = bt_mac;
@@ -49,8 +83,7 @@ class Authenticator
 
     std::vector<int> db_list_users()
     {
-        std::vector<int> list = __storage_users->list_elements();
-        return list;
+        return __storage_users->list_elements();
     };
 
     user db_get_user(int id)
@@ -70,43 +103,8 @@ class Authenticator
         return __discovered_users;
     }
 
-    void bt_app_gap_cb(esp_bt_gap_cb_event_t event, esp_bt_gap_cb_param_t *param)
-    {
-        char bda_str[18];
-
-        switch (event)
-        {
-        case ESP_BT_GAP_DISC_RES_EVT:
-        {
-            handle_device_found(param);
-            break;
-        }
-        case ESP_BT_GAP_DISC_STATE_CHANGED_EVT:
-        {
-            if (param->disc_st_chg.state == ESP_BT_GAP_DISCOVERY_STOPPED)
-            {
-                Serial.println("Device discovery stopped.");
-            }
-            else if (param->disc_st_chg.state == ESP_BT_GAP_DISCOVERY_STARTED)
-            {
-                Serial.println("Discovery started.");
-            }
-            break;
-        }
-        default:
-        {
-            Serial.printf("event: %d\n", event);
-            break;
-        }
-        }
-        return;
-    }
-
     ~Authenticator()
     {
-        esp_bluedroid_disable();
-        esp_bluedroid_deinit();
-        esp_bt_controller_disable();
-        esp_bt_controller_deinit();
+        delete bt;
     };
 };
