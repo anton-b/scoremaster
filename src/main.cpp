@@ -1,8 +1,8 @@
 #include <Arduino.h>
-#include "src/types.h"
-#include "src/storage.h"
-#include "src/screen.h"
-#include "src/matchrun.h"
+#include "types.h"
+#include "storage.h"
+#include "screen.h"
+#include "matchrun.h"
 //25 worked, 19 worked, 18 worked, 5 worked
 #define BLUEDETECTOR 19 
 #define REDDETECTOR 18
